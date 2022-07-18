@@ -1,0 +1,11 @@
+{
+  "name": "pm2-dash-web",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 7312",
+    "build": "next build",
+    "start": "next start -p 80",
+    "lint": "next lint"
+  }
+}

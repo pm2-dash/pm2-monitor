@@ -1,0 +1,27 @@
+#__next {
+  background-color: #282c34 !important;
+}
+
+#__next.anime {
+  background-image: url(https://cdn.discordapp.com/attachments/842808610697642044/998379510632300615/unknown.png) !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+/* custom scrollbar */
+::-webkit-scrollbar{
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-thumb{
+  background: #B3AFB3 !important;
+  border-radius: 6px;
+
+}
+::-webkit-scrollbar-thumb:hover{
+  background: #B3AFB3;
+}
+::-webkit-scrollbar-track{
+  background: transparent;
+  border-radius: 0px;
+  box-shadow: inset 0px 0px 0px 0px #F0F0F0;
+}
