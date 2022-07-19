@@ -7,6 +7,7 @@ import {
   clearProcesses,
   deleteProcess
 } from '../store/reducers/processes.reducer'
+import { setSelected } from '../store/reducers/selected.reducer'
 import { API } from './API'
 
 export class WebSocket {
@@ -22,12 +23,14 @@ export class WebSocket {
   constructor(api: typeof API) {
     this.ws.on('disconnect', () => {
       store.dispatch(clearProcesses())
+      store.dispatch(setSelected(null))
     })
     this.ws.on('PROCESS_CREATE', (process) => {
       api.storedProcesses[process.id] = process
       store.dispatch(addProcess(process))
     })
     this.ws.on('PROCESS_UPDATE', (process) => {
+      api.storedProcesses[process.id] = process
       api.processListener.emit(`${process.id}`, process)
     })
     this.ws.on('PROCESS_DELETE', ({ id }) => {

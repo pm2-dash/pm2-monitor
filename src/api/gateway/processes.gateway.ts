@@ -15,6 +15,12 @@ export class ProcessesGateway implements OnGatewayConnection {
     pm2.on('PROCESS_UPDATED', (p) => {
       this.server.emit('PROCESS_UPDATE', p)
     })
+    pm2.on('PROCESS_CREATED', (p) => {
+      this.server.emit('PROCESS_CREATE', p)
+    })
+    pm2.on('PROCESS_DELETE', (p) => {
+      this.server.emit('PROCESS_DELETE', p)
+    })
   }
 
   @WebSocketServer()

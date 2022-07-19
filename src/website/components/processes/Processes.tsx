@@ -16,7 +16,6 @@ import { useState, useEffect } from 'react'
 import { ProcessInfo } from '@pm2-dash/typings'
 
 import FuzzySearch from 'fuzzy-search'
-import { FaSearch } from 'react-icons/fa'
 
 export function Processes() {
   const [processes] = useProcesses()
@@ -30,25 +29,17 @@ export function Processes() {
   }, [processes])
 
   return (
-    <VStack h="100vh" overflowY="scroll" bg="darker.10" p="15px" w="20vw">
-      <InputGroup>
-        <InputLeftAddon
-          onClick={() =>
-            document.getElementById('__next')!.classList.toggle('anime')
-          }
-        >
-          <Icon color="brand.100" as={FaSearch} />
-        </InputLeftAddon>
-        <Input
-          value={searchTerm}
-          onChange={({ currentTarget }) => {
-            setSearchTerm(
-              currentTarget.value == '' ? undefined : currentTarget.value
-            )
-          }}
-          placeholder="Search..."
-        />
-      </InputGroup>
+    <VStack h="100vh" overflowY="scroll" bg="darker.10" p="10px" w="12vw">
+      <Input
+        value={searchTerm}
+        size="sm"
+        onChange={({ currentTarget }) => {
+          setSearchTerm(
+            currentTarget.value == '' ? undefined : currentTarget.value
+          )
+        }}
+        placeholder="Search..."
+      />
       {processes.length ? (
         (searchTerm ? fuzzy.search(searchTerm) : processes).map(({ id }) => (
           <ProcessSelector id={id} key={id} />

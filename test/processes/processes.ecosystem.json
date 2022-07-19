@@ -1,0 +1,22 @@
+[
+  {
+    "name": "one",
+    "script": "./1.js"
+  },
+  {
+    "name": "two",
+    "script": "./2.js"
+  },
+  {
+    "name": "three",
+    "script": "./3.js"
+  },
+  {
+    "name": "four",
+    "script": "./4.js"
+  },
+  {
+    "name": "three",
+    "script": "./5.js"
+  }
+]

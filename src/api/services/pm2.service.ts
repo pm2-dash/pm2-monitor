@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { ProcessInfo, ProcessStatus } from '@pm2-dash/typings'
 import { EventEmitter } from '@jpbberry/typed-emitter'
+import pm2, { ProcessDescription } from 'pm2'
 
 const randomLetters = () => Math.random().toString(20).substring(2)
 let currentId = 0
@@ -12,54 +13,100 @@ const randomFromEnum = (b: any): any => {
 }
 
 @Injectable()
-export class PM2Service extends EventEmitter<{ PROCESS_UPDATED: ProcessInfo }> {
-  processes: ProcessInfo[]
+export class PM2Service extends EventEmitter<{
+  PROCESS_UPDATED: ProcessInfo
+  PROCESS_CREATED: ProcessInfo
+  PROCESS_DELETE: Pick<ProcessInfo, 'id'>
+}> {
+  processes: ProcessInfo[] = []
+
+  interval = 500
+
+  private connected = false
 
   constructor() {
     super()
 
-    this.listProcesses().then((processes) => {
-      this.processes = processes
-      setInterval(async () => {
-        for (let oldProcess of processes) {
-          const newProcess = this.createRandomProcess()
-          newProcess.id = oldProcess.id
-          newProcess.name = oldProcess.name
-          newProcess.status = oldProcess.status
+    this.createPM2Controller()
+  }
 
-          this.emit('PROCESS_UPDATED', newProcess)
-
-          await new Promise((res) =>
-            setTimeout(res, Math.floor(Math.random() * 500))
-          )
-        }
-      }, 2e3)
+  private async createPM2Controller() {
+    await new Promise<void>((resolve, reject) => {
+      pm2.connect((error) => {
+        if (error) reject(error)
+        else resolve()
+      })
     })
+
+    Logger.log('Connected to PM2')
+
+    this.connected = true
+
+    this.setupInterval()
   }
-  private createRandomProcess(): ProcessInfo {
+
+  private translateProcess(info: ProcessDescription): ProcessInfo {
+    if (!info.monit) throw new Error('No monitoring data')
+    if (!info.pm2_env) throw new Error('No PM2 Env data')
+
     return {
-      name: randomLetters(),
-      id: currentId++,
-      cpuUsage: 1 + Math.floor(Math.random() * 99),
-      ramUsage: 10000 + Math.floor(Math.random() * 99000000),
-      status: ProcessStatus.Online,
-      uptime: 20000000 + Math.floor(Math.random() * 99213123),
+      cpuUsage: info.monit.cpu!,
+      id: info.pm_id!,
       metadata: {
-        createdAt: Date.now() - Math.floor(Math.random() * 90000),
-        execPath: '//balls',
-        interpreter: 'node.gay yes'
-      }
+        // @ts-ignore
+        createdAt: info.pm2_env.created_at,
+        execPath: info.pm2_env.pm_exec_path!,
+        interpreter: info.pm2_env.exec_interpreter!,
+        // @ts-ignore
+        namespace: info.pm2_env.namespace,
+        // @ts-ignore
+        version: info.pm2_env.node_version
+      },
+      name: info.name!,
+      ramUsage: info.monit.memory!,
+      restarts: info.pm2_env.unstable_restarts!,
+      status: (
+        {
+          online: ProcessStatus.Online,
+          errored: ProcessStatus.Errored,
+          launching: ProcessStatus.Launching,
+          stopped: ProcessStatus.Stopped,
+          stopping: ProcessStatus.Stopping,
+          'one-launch-status': ProcessStatus.OneLaunchStatus
+        } as {
+          [key in Required<
+            Required<ProcessDescription>['pm2_env']
+          >['status']]: ProcessStatus
+        }
+      )[info.pm2_env.status!],
+      uptime: info.pm2_env.pm_uptime!
     }
   }
 
-  async listProcesses(): Promise<ProcessInfo[]> {
-    if (this.processes) return this.processes
+  private setupInterval() {
+    setInterval(() => {
+      pm2.list((error, list) => {
+        if (!error) {
+          const processes = list.map((process) =>
+            this.translateProcess(process)
+          )
 
-    let res: ProcessInfo[] = []
-    for (let i = 0; i < 30; i++) {
-      res.push(this.createRandomProcess())
-    }
+          for (const process of processes) {
+            if (this.processes.some((p) => p.id === process.id)) {
+              this.emit('PROCESS_UPDATED', process)
+            } else {
+              this.emit('PROCESS_CREATED', process)
+            }
+          }
 
-    return res
+          for (const existingProcess of this.processes) {
+            if (!processes.some((x) => x.id === existingProcess.id))
+              this.emit('PROCESS_DELETE', { id: existingProcess.id })
+          }
+
+          this.processes = processes
+        }
+      })
+    }, this.interval)
   }
 }
