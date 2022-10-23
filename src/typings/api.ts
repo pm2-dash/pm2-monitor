@@ -25,3 +25,14 @@ export interface ProcessInfo {
   restarts: number
   metadata: ProcessMetadata
 }
+
+export enum ProcessAction {
+  Stop,
+  Restart,
+  Start,
+  Delete
+}
+
+export interface ActionBody {
+  action: ProcessAction
+}

@@ -10,7 +10,11 @@ import {
 } from '@chakra-ui/react'
 import { FaMicrochip, FaMemory, FaHashtag } from 'react-icons/fa'
 import { ProcessStatus } from '@pm2-dash/typings'
-import { useProcess, useSelectedProcess } from '../../hooks/useProcess'
+import {
+  useProcess,
+  useSelectedProcess,
+  useSelectedState
+} from '../../hooks/useProcess'
 import { useDispatch } from 'react-redux'
 import { setSelected } from '@/../store/reducers/selected.reducer'
 import { StatusIcon } from '../process/StatusIcon'
@@ -24,6 +28,7 @@ const statFontSize = '12px'
 export function ProcessSelector({ id }: ProcessSelectorOptions) {
   const [process] = useProcess(id)
   const dispatch = useDispatch()
+  const selected = useSelectedState()
 
   return (
     <HStack
@@ -32,7 +37,7 @@ export function ProcessSelector({ id }: ProcessSelectorOptions) {
       onClick={() => {
         dispatch(setSelected(process.id))
       }}
-      bg="darker.20"
+      bg={selected === process.id ? 'lighter.10' : 'darker.20'}
       justify="space-between"
       borderRadius="8px"
       px="8px"

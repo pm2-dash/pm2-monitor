@@ -1,6 +1,12 @@
 import { ProcessStatus } from '@pm2-dash/typings'
 import { Tooltip, Box, Flex, BoxProps } from '@chakra-ui/react'
 
+export const PROCESS_CAN_START = [ProcessStatus.Stopped, ProcessStatus.Errored]
+export const PROCESS_CAN_STOP = [
+  ProcessStatus.Online,
+  ProcessStatus.OneLaunchStatus
+]
+
 export interface StatusIconProps extends BoxProps {
   status: ProcessStatus
 }

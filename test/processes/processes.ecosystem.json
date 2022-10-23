@@ -1,22 +1,22 @@
 [
   {
     "name": "one",
-    "script": "./1.js"
+    "script": "./process.js"
   },
   {
     "name": "two",
-    "script": "./1.js"
+    "script": "./process.js"
   },
   {
     "name": "three",
-    "script": "./1.js"
+    "script": "./process.js"
   },
   {
     "name": "four",
-    "script": "./1.js"
+    "script": "./process.js"
   },
   {
-    "name": "three",
-    "script": "./1.js"
+    "name": "five",
+    "script": "./process.js"
   }
 ]

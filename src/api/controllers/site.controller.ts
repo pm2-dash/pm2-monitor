@@ -4,6 +4,7 @@ import { Request, Response } from 'express'
 import path from 'path'
 
 import Next from 'next'
+import { ApiHideProperty } from '@nestjs/swagger'
 
 @Controller()
 export class SiteController {
