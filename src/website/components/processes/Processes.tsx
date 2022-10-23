@@ -29,7 +29,14 @@ export function Processes() {
   }, [processes])
 
   return (
-    <VStack h="100vh" overflowY="scroll" bg="darker.10" p="10px" w="12vw">
+    <VStack
+      h="100vh"
+      overflowY="scroll"
+      bg="darker.10"
+      p="10px"
+      w="12vw"
+      minW="208px"
+    >
       <Input
         value={searchTerm}
         size="sm"

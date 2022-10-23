@@ -5,18 +5,18 @@
   },
   {
     "name": "two",
-    "script": "./2.js"
+    "script": "./1.js"
   },
   {
     "name": "three",
-    "script": "./3.js"
+    "script": "./1.js"
   },
   {
     "name": "four",
-    "script": "./4.js"
+    "script": "./1.js"
   },
   {
     "name": "three",
-    "script": "./5.js"
+    "script": "./1.js"
   }
 ]

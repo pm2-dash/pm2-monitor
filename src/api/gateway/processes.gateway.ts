@@ -5,20 +5,20 @@ import {
   WebSocketServer
 } from '@nestjs/websockets'
 import { Server } from 'socket.io'
-import { PM2Service } from '../services/pm2.service'
+import { ProcessService } from '../services/process.service'
 
 import { EventsToServer, EventsFromServer } from '@pm2-dash/typings'
 
 @WebSocketGateway({ path: '/ws', pingInterval: 45e3 })
 export class ProcessesGateway implements OnGatewayConnection {
-  constructor(private readonly pm2: PM2Service) {
-    pm2.on('PROCESS_UPDATED', (p) => {
+  constructor(private readonly processes: ProcessService) {
+    processes.on('PROCESS_UPDATED', (p) => {
       this.server.emit('PROCESS_UPDATE', p)
     })
-    pm2.on('PROCESS_CREATED', (p) => {
+    processes.on('PROCESS_CREATED', (p) => {
       this.server.emit('PROCESS_CREATE', p)
     })
-    pm2.on('PROCESS_DELETE', (p) => {
+    processes.on('PROCESS_DELETE', (p) => {
       this.server.emit('PROCESS_DELETE', p)
     })
   }
@@ -34,11 +34,8 @@ export class ProcessesGateway implements OnGatewayConnection {
   >
 
   handleConnection(client: this['server']) {
-    this.pm2.processes.forEach((process) => {
+    this.processes.processes.forEach((process) => {
       client.emit('PROCESS_CREATE', process)
     })
   }
-
-  @SubscribeMessage('LOGS_SUBSCRIBE')
-  balls() {}
 }

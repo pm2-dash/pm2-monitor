@@ -21,7 +21,7 @@ export interface ProcessInfo {
   status: ProcessStatus
   ramUsage: number
   cpuUsage: number
-  uptime: number
+  startedDate: number
   restarts: number
   metadata: ProcessMetadata
 }
