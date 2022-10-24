@@ -18,6 +18,6 @@ async function bootstrap(): Promise<void> {
 
   SwaggerModule.setup('api/swagger', app, document)
 
-  await app.listen(3000)
+  await app.listen(2349)
 }
 bootstrap()

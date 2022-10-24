@@ -4,6 +4,7 @@ import JPBProvider from '@jpbbots/theme'
 import { store } from '../store'
 
 import './Global.css'
+import 'xterm/css/xterm.css'
 import { Provider } from 'react-redux'
 import { API } from '../structures/API'
 
