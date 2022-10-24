@@ -21,3 +21,8 @@ export class API {
     }).then((x) => x.json())
   }
 }
+
+if ('window' in global) {
+  // @ts-expect-error
+  global.api = API
+}

@@ -37,7 +37,8 @@ export class ProcessService extends EventEmitter<{
         // @ts-ignore
         namespace: info.pm2_env.namespace,
         // @ts-ignore
-        version: info.pm2_env.node_version
+        version: info.pm2_env.node_version,
+        logPath: info.pm2_env.pm_out_log_path!
       },
       name: info.name!,
       ramUsage: info.monit.memory!,

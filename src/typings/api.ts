@@ -13,6 +13,7 @@ export interface ProcessMetadata {
   execPath: string
   createdAt: number
   interpreter: string
+  logPath: string
 }
 
 export interface ProcessInfo {

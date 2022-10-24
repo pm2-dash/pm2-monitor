@@ -1,1 +1,3 @@
-setInterval(() => {}, 1e3).ref()
+setInterval(() => {
+  console.log(Math.random())
+}, 100).ref()

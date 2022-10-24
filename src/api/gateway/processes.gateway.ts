@@ -1,17 +1,32 @@
 import {
+  ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer
 } from '@nestjs/websockets'
-import { Server } from 'socket.io'
+import { Server, Socket } from 'socket.io'
 import { ProcessService } from '../services/process.service'
 
 import { EventsToServer, EventsFromServer } from '@pm2-dash/typings'
+import { LogReader, LogsService } from '../services/logs.service'
+
+export type SocketConnection = Socket<
+  {
+    [key in keyof EventsToServer]: (val: EventsToServer[key]) => void
+  },
+  {
+    [key in keyof EventsFromServer]: (val: EventsFromServer[key]) => void
+  }
+> & { reader?: LogReader }
 
 @WebSocketGateway({ path: '/ws', pingInterval: 45e3 })
 export class ProcessesGateway implements OnGatewayConnection {
-  constructor(private readonly processes: ProcessService) {
+  constructor(
+    private readonly processes: ProcessService,
+    private readonly log: LogsService
+  ) {
     processes.on('PROCESS_UPDATED', (p) => {
       this.server.emit('PROCESS_UPDATE', p)
     })
@@ -37,5 +52,23 @@ export class ProcessesGateway implements OnGatewayConnection {
     this.processes.processes.forEach((process) => {
       client.emit('PROCESS_CREATE', process)
     })
+  }
+
+  @SubscribeMessage('LOGS_SUBSCRIBE')
+  onLogSubscribe(
+    @MessageBody() data: EventsToServer['LOGS_SUBSCRIBE'],
+    @ConnectedSocket() socket: SocketConnection
+  ) {
+    socket.reader = this.log.createReader(data.id)
+    socket.reader.listen((log) => {
+      socket.emit('LOG', log)
+    })
+  }
+
+  @SubscribeMessage('LOGS_UNSUBSCRIBE')
+  onLogUnsubscribe(@ConnectedSocket() socket: SocketConnection) {
+    socket.reader?.detach()
+
+    socket.emit('LOGS_UNSUBSCRIBED')
   }
 }

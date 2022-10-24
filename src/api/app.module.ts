@@ -11,6 +11,7 @@ import { ProcessService } from './services/process.service'
 
 import { ProcessesGateway } from './gateway/processes.gateway'
 import { PM2Service } from './services/pm2.service'
+import { LogsService } from './services/logs.service'
 
 @Module({
   controllers: [
@@ -19,6 +20,12 @@ import { PM2Service } from './services/pm2.service'
     BaseController,
     SiteController
   ],
-  providers: [Reflector, PM2Service, ProcessService, ProcessesGateway]
+  providers: [
+    Reflector,
+    PM2Service,
+    LogsService,
+    ProcessService,
+    ProcessesGateway
+  ]
 })
 export class AppModule {}
