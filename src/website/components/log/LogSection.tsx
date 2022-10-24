@@ -13,12 +13,12 @@ import {
 import { useEffect, useRef, useState } from 'react'
 import { FaArrowDown } from 'react-icons/fa'
 
-export interface LogSectionOptions {}
+export interface LogSectionProps {}
 
 let serviceId: number
 let logs: string[] = []
 
-export function LogSection({}: LogSectionOptions) {
+export function LogSection({}: LogSectionProps) {
   const [selectedProcess] = useSelectedProcess()
   const logText = useRef<HTMLParagraphElement>(null)
   const logDiv = useRef<HTMLDivElement>(null)

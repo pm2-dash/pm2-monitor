@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 const BUTTON_SIZE = 56
 const ICON_SIZE = BUTTON_SIZE * 0.65
 
-export interface ControlsOptions {
+export interface ControlsProps {
   onAction: (action: ProcessAction) => void
   status: ProcessStatus
 }
@@ -19,7 +19,7 @@ enum ControlStatus {
   Loading
 }
 
-export function Controls({ onAction, status }: ControlsOptions) {
+export function Controls({ onAction, status }: ControlsProps) {
   const [controlStatus, setControlStatus] = useState(ControlStatus.Loading)
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export function Controls({ onAction, status }: ControlsOptions) {
   }, [status])
 
   return (
-    <VStack h="full">
+    <HStack h="full">
       <Box>
         <Button
           aria-label="start/stop process"
@@ -81,7 +81,6 @@ export function Controls({ onAction, status }: ControlsOptions) {
           <Icon as={FaRedo} color="#388bb8" w={ICON_SIZE} h={ICON_SIZE} />
         </Button>
       </Box>
-      <Box></Box>
-    </VStack>
+    </HStack>
   )
 }

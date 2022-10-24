@@ -1,31 +1,18 @@
 import { NumberUtils } from '@/../utils/NumberUtils'
-import {
-  HStack,
-  Button,
-  VStack,
-  Icon,
-  Box,
-  Text,
-  Tooltip
-} from '@chakra-ui/react'
+import { HStack, Button, VStack, Icon, Text } from '@chakra-ui/react'
 import { FaMicrochip, FaMemory, FaHashtag } from 'react-icons/fa'
-import { ProcessStatus } from '@pm2-dash/typings'
-import {
-  useProcess,
-  useSelectedProcess,
-  useSelectedState
-} from '../../hooks/useProcess'
+import { useProcess, useSelectedState } from '../../hooks/useProcess'
 import { useDispatch } from 'react-redux'
 import { setSelected } from '@/../store/reducers/selected.reducer'
 import { StatusIcon } from '../process/StatusIcon'
 
-interface ProcessSelectorOptions {
+interface ProcessSelectorProps {
   id: number
 }
 
 const statFontSize = '12px'
 
-export function ProcessSelector({ id }: ProcessSelectorOptions) {
+export function ProcessSelector({ id }: ProcessSelectorProps) {
   const [process] = useProcess(id)
   const dispatch = useDispatch()
   const selected = useSelectedState()
