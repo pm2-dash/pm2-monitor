@@ -13,9 +13,9 @@ export function Process() {
     <VStack pb="20px" w="full" h="full" spacing="20px">
       <Box w="full" h="8%" py="20px" bg="darker.20">
         <HStack w="full" justify="center" align="center" spacing="10px">
-          {selectedProcess && selectedProcess.metadata.namespace !== 'default' && (
+          {selectedProcess && selectedProcess.namespace !== 'default' && (
             <Text justifySelf="flex-start" textStyle="heading.sm">
-              {selectedProcess.metadata.namespace} /
+              {selectedProcess.namespace} /
             </Text>
           )}
           <Box>

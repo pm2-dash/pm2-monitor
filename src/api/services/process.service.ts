@@ -35,13 +35,13 @@ export class ProcessService extends EventEmitter<{
         execPath: info.pm2_env.pm_exec_path!,
         interpreter: info.pm2_env.exec_interpreter!,
         // @ts-ignore
-        namespace: info.pm2_env.namespace,
-        // @ts-ignore
         version: info.pm2_env.node_version,
         logPath: info.pm2_env.pm_out_log_path!
       },
       name: info.name!,
       ramUsage: info.monit.memory!,
+      // @ts-ignore
+      namespace: info.pm2_env.namespace,
       restarts: info.pm2_env.unstable_restarts!,
       status: (
         {

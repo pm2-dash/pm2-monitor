@@ -8,7 +8,6 @@ export enum ProcessStatus {
 }
 
 export interface ProcessMetadata {
-  namespace: string
   version?: string
   execPath: string
   createdAt: number
@@ -24,6 +23,7 @@ export interface ProcessInfo {
   cpuUsage: number
   startedDate: number
   restarts: number
+  namespace: string
   metadata: ProcessMetadata
 }
 

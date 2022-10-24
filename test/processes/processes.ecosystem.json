@@ -9,14 +9,17 @@
   },
   {
     "name": "three",
-    "script": "./process.js"
+    "script": "./process.js",
+    "namespace": "balls"
   },
   {
     "name": "four",
-    "script": "./process.js"
+    "script": "./process.js",
+    "namespace": "bots"
   },
   {
     "name": "five",
-    "script": "./process.js"
+    "script": "./process.js",
+    "namespace": "bots"
   }
 ]

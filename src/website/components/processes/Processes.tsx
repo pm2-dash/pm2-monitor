@@ -16,17 +16,24 @@ import { useState, useEffect } from 'react'
 import { ProcessInfo } from '@pm2-dash/typings'
 
 import FuzzySearch from 'fuzzy-search'
+import { SimpleProcessInfo } from '@/../store/reducers/processes.reducer'
 
 export function Processes() {
   const [processes] = useProcesses()
   const [searchTerm, setSearchTerm] = useState<string | undefined>()
-  const [fuzzy] = useState<FuzzySearch<Pick<ProcessInfo, 'id' | 'name'>>>(
+  const [fuzzy] = useState<FuzzySearch<SimpleProcessInfo>>(
     new FuzzySearch([], ['id', 'name'], { sort: true })
   )
 
   useEffect(() => {
     fuzzy.haystack = processes
   }, [processes])
+
+  const namespaces = processes.reduce<string[]>((a, b) => {
+    if (!a.includes(b.namespace)) a.push(b.namespace)
+
+    return a
+  }, [])
 
   return (
     <VStack
@@ -48,9 +55,26 @@ export function Processes() {
         placeholder="Search..."
       />
       {processes.length ? (
-        (searchTerm ? fuzzy.search(searchTerm) : processes).map(({ id }) => (
-          <ProcessSelector id={id} key={id} />
-        ))
+        searchTerm ? (
+          fuzzy
+            .search(searchTerm)
+            .map(({ id }) => <ProcessSelector id={id} key={id} />)
+        ) : (
+          namespaces.map((ns) => (
+            <>
+              {ns !== 'default' && (
+                <Text alignSelf="flex-start" textStyle="label.md">
+                  {ns}
+                </Text>
+              )}
+              {processes
+                .filter((x) => x.namespace === ns)
+                .map(({ id }) => (
+                  <ProcessSelector id={id} />
+                ))}
+            </>
+          ))
+        )
       ) : (
         <Loading />
       )}

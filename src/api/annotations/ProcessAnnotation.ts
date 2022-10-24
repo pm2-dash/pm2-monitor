@@ -43,5 +43,12 @@ export class ProcessAnnotation implements ProcessInfo {
     example: 5
   })
   restarts: number
+
+  @ApiProperty({
+    description: 'Namespace the process belongs to',
+    example: 'bots'
+  })
+  namespace: string
+
   metadata: ProcessMetadata
 }

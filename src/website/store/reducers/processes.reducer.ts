@@ -1,16 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ProcessInfo } from '@pm2-dash/typings'
 
-const initialState: Pick<ProcessInfo, 'id' | 'name'>[] = []
+export type SimpleProcessInfo = Pick<ProcessInfo, 'id' | 'name' | 'namespace'>
+
+const initialState: SimpleProcessInfo[] = []
 
 const slice = createSlice({
   name: 'processes',
   initialState,
   reducers: {
-    addProcess(
-      state,
-      payload: PayloadAction<Pick<ProcessInfo, 'id' | 'name'>>
-    ) {
+    addProcess(state, payload: PayloadAction<SimpleProcessInfo>) {
       state.push(payload.payload)
 
       return state
